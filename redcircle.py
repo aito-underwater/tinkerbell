@@ -2,7 +2,7 @@ import cv2
 import cv2 as cv
 import numpy as np
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('rtsp://admin:123456@192.168.1.237/1')
 
 
 while True:
