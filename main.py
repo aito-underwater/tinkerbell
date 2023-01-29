@@ -109,7 +109,7 @@ def main():
 
     # a way to watch the camera unthrottled
     def callback(img):
-        cv.imshow("realtime", img)
+        pass
 
     # main thread owns windows, does waitkey
 
@@ -123,7 +123,7 @@ def main():
         # test that this really takes NO time
         # (if it does, the camera is actually slower than this loop and we have to wait!)
         t0 = time.perf_counter()
-        cnt, img = fresh.read(seqnumber=cnt + 1)
+        cnt, frame = fresh.read(seqnumber=cnt + 1)
         dt = time.perf_counter() - t0
         if dt > 0.010:  # 10 milliseconds
             print("NOTICE: read() took {dt:.3f} secs".format(dt=dt))
@@ -131,11 +131,45 @@ def main():
         # let's pretend we need some time to process this frame
         print("processing {cnt}...".format(cnt=cnt), end=" ", flush=True)
 
-        cv.imshow("frame", img)
-        # this keeps both imshow windows updated during the wait (in particular the "realtime" one)
+
+        # -----------------------------------------------------------
+
+        ret, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+        # red
+        lower_red = np.array([136, 87, 111])
+        upper_red = np.array([180, 255, 255])
+        red_mask = cv2.inRange(hsv_frame, lower_red, upper_red)
+        frame = cv2.bitwise_and(frame, frame, mask=red_mask)
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray_blurred = cv2.blur(gray, (3, 3))
+        detected_circles = cv2.HoughCircles(gray_blurred,
+                                            cv2.HOUGH_GRADIENT, 1, 20, param1=50,
+                                            param2=30, minRadius=1, maxRadius=40)
+
+        if detected_circles is not None:
+            detected_circles = np.uint16(np.around(detected_circles))
+
+            for pt in detected_circles[0, :]:
+                a, b, r = pt[0], pt[1], pt[2]
+
+                cv2.circle(frame, (a, b), r, (0, 255, 0), 2)
+                cv2.circle(frame, (a, b), 1, (0, 0, 255), 3)
+
+                print(a, b)
+
+        cv2.imshow("Red", frame)
         key = cv.waitKey(200)
-        if key == 27:
+        if cv2.waitKey(1) & 0xFF == ord("q"):
             break
+
+# ----------------------------------------------------------------
+        # this keeps both imshow windows updated during the wait (in particular the "realtime" one)
+
+
 
         print("done!")
 
