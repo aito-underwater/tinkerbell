@@ -101,7 +101,7 @@ def main():
     cv.namedWindow("realtime")
 
     # open some camera
-    cap = cv.VideoCapture(0)
+    cap = cv.VideoCapture('rtsp://admin:123456@192.168.1.237/H264?ch=1&subtype=0')
     cap.set(cv.CAP_PROP_FPS, 30)
 
     # wrap it
