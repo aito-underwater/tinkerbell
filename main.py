@@ -19,7 +19,7 @@ import sys
 import time
 import threading
 import numpy as np
-import cv2 as
+import cv2
 
 
 
