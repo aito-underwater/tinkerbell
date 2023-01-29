@@ -19,7 +19,8 @@ import sys
 import time
 import threading
 import numpy as np
-import cv2 as cv
+import cv2 as
+
 
 
 # also acts (partly) like a cv.VideoCapture
@@ -96,13 +97,13 @@ class FreshestFrame(threading.Thread):
 
 def main():
     # these windows belong to the main thread
-    cv.namedWindow("frame")
+    cv2.namedWindow("frame")
     # on win32, imshow from another thread to this DOES work
-    cv.namedWindow("realtime")
+    cv2.namedWindow("realtime")
 
     # open some camera
-    cap = cv.VideoCapture('rtsp://admin:123456@192.168.1.237/H264?ch=1&subtype=0')
-    cap.set(cv.CAP_PROP_FPS, 30)
+    cap = cv2.VideoCapture('rtsp://admin:123456@192.168.1.237/H264?ch=1&subtype=0')
+    cap.set(cv2.CAP_PROP_FPS, 30)
 
     # wrap it
     fresh = FreshestFrame(cap)
@@ -162,7 +163,7 @@ def main():
                 print(a, b)
 
         cv2.imshow("Red", frame)
-        key = cv.waitKey(200)
+        key = cv2.waitKey(200)
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 
@@ -175,8 +176,8 @@ def main():
 
     fresh.release()
 
-    cv.destroyWindow("frame")
-    cv.destroyWindow("realtime")
+    cv2.destroyWindow("frame")
+    cv2.destroyWindow("realtime")
 
 
 if __name__ == '__main__':
