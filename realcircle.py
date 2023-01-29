@@ -24,7 +24,7 @@ while (1):
             cv2.circle(imageFrame, (a, b), r, (0, 255, 0), 2)
             cv2.circle(imageFrame, (a, b), 1, (0, 0, 255), 3)
 
-
+s
         cv.imshow('Detected Circle', imageFrame)
     
     if cv2.waitKey(1) & 0xFF == ord ('q'):
