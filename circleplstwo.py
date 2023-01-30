@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 # Load the IP camera stream
 cap = cv2.VideoCapture('rtsp://admin:123456@192.168.1.237/H264?ch=1&subtype=0')
