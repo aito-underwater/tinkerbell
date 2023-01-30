@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-cap = cv2.VideoCapture('rtsp://admin:123456@192.168.1.237/H264?ch=1&subtype=0')
+cap = cv2.VideoCapture(0)
 
 while True:
     _, frame = cap.read()
@@ -24,15 +24,13 @@ while True:
             cv2.putText(frame, "({}, {})".format(center[0], center[1]), (center[0] + 10, center[1] + 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
         else:
-            try:
+            if len(contour) >= 5:
                 ellipse = cv2.fitEllipse(contour)
-            except Exception as e:
-                continue
-            cv2.ellipse(frame, ellipse, (0, 0, 255), 2)
-            center = ellipse[0]
-            cv2.circle(frame, (int(center[0]), int(center[1])), 3, (0, 255, 0), -1)
-            cv2.putText(frame, "({}, {})".format(int(center[0]), int(center[1])),
-                        (int(center[0]) + 10, int(center[1]) + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                cv2.ellipse(frame, ellipse, (0, 0, 255), 2)
+                center = ellipse[0]
+                cv2.circle(frame, (int(center[0]), int(center[1])), 3, (0, 255, 0), -1)
+                cv2.putText(frame, "({}, {})".format(int(center[0]), int(center[1])),
+                            (int(center[0]) + 10, int(center[1]) + 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     cv2.imshow("Frame", frame)
 
